@@ -38,7 +38,7 @@ if(CXXTEST_FOUND)
 	include_directories(${CXXTEST_INCLUDE_DIR})
   enable_testing()
   set(TEST_SRCS ${CMAKE_CURRENT_SOURCE_DIR}/test/src/ff-test.h 
-    #${CMAKE_CURRENT_SOURCE_DIR}/test/src/ff-test1.h
+      #      ${CMAKE_CURRENT_SOURCE_DIR}/test/src/eot-test.h
     ) 
   
   foreach(_CURTEST ${TEST_SRCS})
@@ -48,10 +48,23 @@ if(CXXTEST_FOUND)
       OUTPUT  ${CUR_CPP_FILE}
       DEPENDS ${_CURTEST}
       COMMAND ${CXXTEST_TESTGEN_INTERPRETER}
-      ${CXXTEST_TESTGEN_EXECUTABLE} ${CXXTEST_TESTGEN_ARGS} -o ${CUR_CPP_FILE} ${_CURTEST}
+      ${CXXTEST_TESTGEN_EXECUTABLE} ${CXXTEST_TESTGEN_ARGS} --part -o ${CUR_CPP_FILE} ${_CURTEST}
       ) 
     set(TEST_CPP_SRCS ${TEST_CPP_SRCS} ${CUR_CPP_FILE})
   endforeach(_CURTEST)
+  
+    set (_CURTEST ${CMAKE_CURRENT_SOURCE_DIR}/test/src/eot-test.h)
+
+    # Need to write a test with main function (without --part option)
+    GET_FILENAME_COMPONENT(_NAME_WE ${_CURTEST} NAME_WE)
+    set(CUR_CPP_FILE  ${CMAKE_CURRENT_SOURCE_DIR}/test/src/${_NAME_WE}.cpp)
+    add_custom_command(
+      OUTPUT  ${CUR_CPP_FILE}
+      DEPENDS ${_CURTEST}
+      COMMAND ${CXXTEST_TESTGEN_INTERPRETER}
+      ${CXXTEST_TESTGEN_EXECUTABLE} ${CXXTEST_TESTGEN_ARGS} -o ${CUR_CPP_FILE} ${_CURTEST}
+      ) 
+    set(TEST_CPP_SRCS ${TEST_CPP_SRCS} ${CUR_CPP_FILE})
 
   add_executable(${OUTPUT_BIN}-test src/ff-bridge.c ${TEST_CPP_SRCS})
   target_link_libraries(${OUTPUT_BIN}-test ${FONT_CONVERTER_LIBS})
