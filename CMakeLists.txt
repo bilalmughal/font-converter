@@ -6,6 +6,10 @@ project (font-converter)
 set(OUTPUT_BIN bin/font-converter)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
+pkg_check_modules(FONTFORGE REQUIRED libfontforge>=2.0.0)
+include_directories(${FONTFORGE_INCLUDE_DIRS})
+link_directories(${FONTFORGE_LIBRARY_DIRS})
+
 set(FONT_CONVERTER_SRC ${FONT_CONVERTER_SRC}
   src/ff-bridge.c
   src/font-converter.cpp
@@ -15,14 +19,10 @@ set(FONT_CONVERTER_LIBS ${FONT_CONVERTER_LIBS} ${FONTFORGE_LIBRARIES})
 
 add_executable(${OUTPUT_BIN} ${FONT_CONVERTER_SRC})
 target_link_libraries(${OUTPUT_BIN} ${FONT_CONVERTER_LIBS})
-
 # cxxtest
 find_package(CxxTest)
 
 # fontforge starts using pkg-config 'correctly' since 2.0.0
-pkg_check_modules(FONTFORGE REQUIRED libfontforge>=2.0.0)
-include_directories(${FONTFORGE_INCLUDE_DIRS})
-link_directories(${FONTFORGE_LIBRARY_DIRS})
 
 #if(CXXTEST_FOUND)
 #	include_directories(${CXXTEST_INCLUDE_DIR})
@@ -54,5 +54,6 @@ if(CXXTEST_FOUND)
   endforeach(_CURTEST)
 
   add_executable(${OUTPUT_BIN}-test src/ff-bridge.c ${TEST_CPP_SRCS})
+  target_link_libraries(${OUTPUT_BIN}-test ${FONT_CONVERTER_LIBS})
 endif()
 

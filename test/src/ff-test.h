@@ -24,26 +24,32 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-  #include "ff-bridge.h"
+#include "ff-bridge.h"
 #ifdef __cplusplus
 }
 #endif
+
 class FFTestSuite : public CxxTest::TestSuite
 {
-	public:
-		void testAddition( void )
-		{
-			//TS_ASSERT( 1 + 1 > 1 );
-			//TS_ASSERT_EQUALS( 1 + 1, 2 );
-		  int res = convert_font("test.ttf", "woff", "result");
-			//TS_ASSERT( 1 + 1 > 1 );
-			TS_ASSERT_EQUALS( res, 0 );
-		}
-		void convertfont_ttftowoff_equalszero( void )
-		{
-		  int res = convert_font("test.ttf", "woff", "result");
-			//TS_ASSERT( 1 + 1 > 1 );
-			TS_ASSERT_EQUALS( res, 0 );
-		}
+    public:
+
+        void test_LoadFont( void )
+        {
+            void* res = LoadFont("test/data/yoo.ttf");
+            TS_ASSERT(res);
+        }
+
+        void test_fontConvert_ttf2woff( void )
+        {
+            int res = convert_font("test/data/yoo.ttf", "woff", "bin/result");
+            TS_ASSERT_EQUALS( res, 0 );
+        }
+
+        void test_fontConvert_woff2ttf( void )
+        {
+            int res = convert_font("test/data/yoo.woff", "ttf", "bin/result");
+            TS_ASSERT_EQUALS( res, 0 );
+        }
 };
-#endif
+
+#endif  //__FF_TEST_H__

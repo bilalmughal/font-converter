@@ -1,0 +1,11 @@
+.ycm_extra_conf.py
+.ycm_extra_conf.pyc
+CMakeCache.txt
+CMakeFiles
+CTestTestfile.cmake
+Makefile
+bin/*
+cmake_install.cmake
+tags
+test/src/*.cpp
+*.swp
