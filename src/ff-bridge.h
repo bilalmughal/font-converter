@@ -35,6 +35,6 @@
 #define __FF_BRIDGE_H__
 
 void* LoadFont(const char* src_file);
-int convert_font(const char* src_file, const char* output_format, const char* output_file);
+int convert_font(const char* src_file, const char* output_format, const char* output_file, const char* out_dir);
 
 #endif //__FF_BRIDGE_H__

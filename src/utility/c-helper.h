@@ -16,65 +16,27 @@
 *  TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE 
 *  POSSIBILITY OF SUCH DAMAGE.
 */
-
 /*
 * =====================================================================================
 *
-*       Filename:  ff-bridge.c
+*       Filename:  c-helper.h
 *
-*    Description:  Fontforge bridge Source file
+*    Description:  Helper functions
 *
 *        Version:  1.0
-*        Created:  2015-01-12
+*        Created:  2015-01-14
 *
 *         Author:  Mirza Bilal, bilal@mirzabilal.com
 *
 * =====================================================================================
 */
-#include <fontforge/fontforge.h>
-#include <string.h>
-#include "ff-bridge.h"
+#ifndef __C_HELPER_H__
+#define __C_HELPER_H__
 
-void* LoadFont(const char* src_file)
-{
-    SplineFont* font = NULL;
-    doinitFontForgeMain();
-    font = LoadSplineFont(src_file,1);
-    return font;
-}
+#include <sys/types.h>
+#include <sys/stat.h>
 
-int convert_font(const char* src_file, const char* output_format, const char* output_file, const char* out_dir)
-{
-    SplineFont* font = NULL;
-    font = (SplineFont*)LoadFont(src_file);
-    char out_file[255];
-    char output_dir[255];
-    sprintf(output_dir, "%s", (out_dir == NULL || strlen(out_dir) > 0) ? out_dir : ".");
-    
-    if (output_file == NULL || strlen(output_file) == 0)
-    {
-        if (strlen(font->fontname) > 0)
-            sprintf(out_file, "%s/%s.%s", output_dir, font->fontname, output_format);
-        else
-            sprintf(out_file, "%s/font-%x.%s", output_dir, rand() % 1000, output_format);
-    }
-    else
-    {
-        sprintf(out_file, "%s/%s.%s", out_dir, output_file, output_format);
-    }
-    
-    printf("\nSource File: %s\n", src_file);
-    printf("Output Format: %s\n", output_format);
-    printf("Output File: %s\n", output_file);
+int is_directory_exist(const char* dir_path);
 
-    printf ("Output file path: %s\n",out_file);
-
-    if(font != NULL)
-    {
-        int ret = GenerateScript(font, out_file, NULL, 0, -1, NULL, NULL, font->map, NULL, 1);
-        if(ret)
-            return 0;
-    }
-    return -1;
-}
+#endif //__C_HELPER_H__
 

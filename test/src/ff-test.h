@@ -44,6 +44,7 @@
 extern "C" {
 #endif
 #include "ff-bridge.h"
+#include "utility/c-helper.h"
 #ifdef __cplusplus
 }
 #endif
@@ -58,25 +59,95 @@ class FFTestSuite : public CxxTest::TestSuite
             void* res = LoadFont("test/data/yoo.ttf");
             TS_ASSERT(res);
         }
+        
+        void test_isDirectoryExist_invalidpath( void )
+        {
+            TS_TRACE("Starting Test LoadFont");
+            int res = is_directory_exist("this_path_is_invalid");
+            TS_ASSERT_EQUALS(res, -1);
+        }
+        
+        void test_isDirectoryExist_validpath( void )
+        {
+            TS_TRACE("Starting Test LoadFont");
+            int res = is_directory_exist("./bin");
+            TS_ASSERT_EQUALS(res, 0);
+        }
+        
+        void test_fontConvert_emptyoutname( void )
+        {
+            TS_TRACE("Starting Test fontConvert_emptyoutname");
+            int res = convert_font("test/data/yoo.ttf", "otf", "", "test/result");
+            TS_ASSERT_EQUALS( res, 0 );
+        }
 
         void test_fontConvert_ttf2woff( void )
         {
             TS_TRACE("Starting Test ttf2woff");
-            int res = convert_font("test/data/yoo.ttf", "woff", "bin/result");
-            TS_ASSERT_EQUALS( res, 0 );
-        }
-
-        void test_fontConvert_woff2ttf( void )
-        {
-            TS_TRACE("Starting Test woff2ttf");
-            int res = convert_font("test/data/yoo.woff", "ttf", "bin/result");
+            int res = convert_font("test/data/yoo.ttf", "woff", "yoo", "test/result");
             TS_ASSERT_EQUALS( res, 0 );
         }
         
         void test_fontConvert_ttf2otf( void )
         {
             TS_TRACE("Starting Test ttf2otf");
-            int res = convert_font("test/data/yoo.ttf", "otf", "bin/result");
+            int res = convert_font("test/data/yoo.ttf", "otf", "yoo", "test/result");
+            TS_ASSERT_EQUALS( res, 0 );
+        }
+
+        void test_fontConvert_ttf2dfont( void )
+        {
+            TS_TRACE("Starting Test ttf2otf");
+            int res = convert_font("test/data/yoo.ttf", "dfont", "yoo", "test/result");
+            TS_ASSERT_EQUALS( res, 0 );
+        }
+
+        void test_fontConvert_woff2ttf( void )
+        {
+            TS_TRACE("Starting Test woff2ttf");
+            int res = convert_font("test/data/Oxygen.woff", "ttf", "oxygen", "test/result");
+            TS_ASSERT_EQUALS( res, 0 );
+        }
+        
+        void test_fontConvert_woff2otf( void )
+        {
+            TS_TRACE("Starting Test woff2ttf");
+            int res = convert_font("test/data/Oxygen.woff", "otf", "oxygen", "test/result");
+            TS_ASSERT_EQUALS( res, 0 );
+        }
+        
+        void test_fontConvert_woff2dfont( void )
+        {
+            TS_TRACE("Starting Test woff2ttf");
+            int res = convert_font("test/data/Oxygen.woff", "dfont", "oxygen", "test/result");
+            TS_ASSERT_EQUALS( res, 0 );
+        }
+        
+        void test_fontConvert_otftottf( void )
+        {
+            TS_TRACE("Starting Test fontConvert_otftottf");
+            int res = convert_font("test/data/Prociono-Regular.otf", "ttf" , "Prociono-Regular", "test/result");
+            TS_ASSERT_EQUALS( res, 0 );
+        }
+        
+        void test_fontConvert_otftowoff( void )
+        {
+            TS_TRACE("Starting Test fontConvert_otftottf");
+            int res = convert_font("test/data/Prociono-Regular.otf", "woff" , "Prociono-Regular", "test/result");
+            TS_ASSERT_EQUALS( res, 0 );
+        }
+        
+        void test_fontConvert_otftodfont( void )
+        {
+            TS_TRACE("Starting Test fontConvert_otftottf");
+            int res = convert_font("test/data/Prociono-Regular.otf", "dfont" , "Prociono-Regular", "test/result");
+            TS_ASSERT_EQUALS( res, 0 );
+        }
+        
+        void test_fontConvert_dfont2ttf( void )
+        {
+            TS_TRACE("Starting Test dfont2ttf");
+            int res = convert_font("test/data/Courier.dfont", "ttf", "Courier", "test/result");
             TS_ASSERT_EQUALS( res, 0 );
         }
 };
