@@ -144,10 +144,17 @@ class FFTestSuite : public CxxTest::TestSuite
             TS_ASSERT_EQUALS( res, 0 );
         }
         
+        void test_fontConvert_ttctottf1( void )
+        {
+            TS_TRACE("Starting Test fontConvert_ttctottf1");
+            int res = convert_font("test/data/vegur.ttc(Vegur Light)", "ttf", NULL, "test/result");
+            TS_ASSERT_EQUALS( res, 0 );
+        }
+        
         void test_fontConvert_dfont2ttf( void )
         {
             TS_TRACE("Starting Test dfont2ttf");
-            int res = convert_font("test/data/Courier.dfont", "ttf", "Courier", "test/result");
+            int res = convert_font("test/data/Courier.dfont(Courier)", "ttf", "", "test/result");
             TS_ASSERT_EQUALS( res, 0 );
         }
             

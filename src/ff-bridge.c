@@ -33,6 +33,7 @@
 */
 #include <fontforge/fontforge.h>
 #include <string.h>
+#include <stdio.h>
 #include "ff-bridge.h"
 
 void* LoadFont(const char* src_file)
@@ -41,6 +42,44 @@ void* LoadFont(const char* src_file)
     doinitFontForgeMain();
     font = LoadSplineFont(src_file,1);
     return font;
+}
+
+char** get_font_names(const char* src_file)
+{
+    char* src_file_copy = strdup(src_file);
+    char** font_names = GetFontNames(src_file_copy);
+    free(src_file_copy);
+    return font_names;
+}
+
+int get_ttc_font_count(const char* src_file)
+{
+    FILE* ttc_file = fopen(src_file, "rb");
+    int fonts_tag, i;
+    int count=0;
+
+    if ( ttc_file == NULL ) 
+    {
+        fprintf( stderr, "Unable to open %s\n", src_file );
+        return count;
+    }
+
+    fonts_tag = getlong(ttc_file);
+    if ( fonts_tag != CHR('t','t','c','f') ) 
+    {
+        fprintf( stderr, "%s is not a valid TTC file.\n", src_file );
+        fclose(ttc_file);
+        return count;
+    }
+
+    fonts_tag = getlong(ttc_file);
+    if ( fonts_tag != 0x10000 && fonts_tag != 0x20000 )
+        fprintf( stderr, "Unexpected ttc version number: %08x\n", fonts_tag );
+    count = getlong(ttc_file);
+    count = (count < 1) ? 1 : count;
+    
+    fclose(ttc_file);
+    return count;
 }
 
 int convert_font(const char* src_file, const char* output_format, const char* output_file, const char* out_dir)
