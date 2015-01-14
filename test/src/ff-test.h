@@ -150,6 +150,33 @@ class FFTestSuite : public CxxTest::TestSuite
             int res = convert_font("test/data/Courier.dfont", "ttf", "Courier", "test/result");
             TS_ASSERT_EQUALS( res, 0 );
         }
+            
+        void test_getTTCFontCount_ttcwith3fonts( void )
+        {
+            TS_TRACE("Starting Test getFontNameCountFromTTC");
+            int res = get_ttc_font_count("test/data/vegur.ttc");
+            TS_ASSERT_EQUALS( res, 3 );
+        }
+        
+        void test_getFontNames_ttcfontnames( void )
+        {
+            TS_TRACE("Starting Test getFontNames_ttcfontname");
+            char** font_names = get_font_names("test/data/vegur.ttc");
+            TS_ASSERT_SAME_DATA("Vegur",font_names[0], 6);
+            for (int i = 0; i < 3; i++) 
+                free(font_names[i]);
+            free(font_names);
+        }
+        
+        void test_getFontNames_ttcfontnames2( void )
+        {
+            TS_TRACE("Starting Test getFontNames_ttcfontname");
+            char** font_names = get_font_names("test/data/vegur.ttc");
+            TS_ASSERT_SAME_DATA("Vegur Bold",font_names[2], 11);
+            for (int i = 0; i < 3; i++) 
+                free(font_names[i]);
+            free(font_names);
+        }
 };
 
 #endif  //__FF_TEST_H__

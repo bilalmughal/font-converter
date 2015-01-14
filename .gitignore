@@ -8,4 +8,5 @@ bin/*
 cmake_install.cmake
 tags
 test/src/*.cpp
+test/result/*
 *.swp
