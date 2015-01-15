@@ -74,7 +74,11 @@ int get_ttc_font_count(const char* src_file)
 
     fonts_tag = getlong(ttc_file);
     if ( fonts_tag != 0x10000 && fonts_tag != 0x20000 )
+    {
         fprintf( stderr, "Unexpected ttc version number: %08x\n", fonts_tag );
+        return count;
+    }
+
     count = getlong(ttc_file);
     count = (count < 1) ? 1 : count;
     
@@ -114,6 +118,110 @@ int convert_font(const char* src_file, const char* output_format, const char* ou
         if(ret)
             return 0;
     }
+    return -1;
+}
+
+int get_dfont_font_count(const char* src_file)
+{
+    FILE* f = fopen(src_file, "rb");
+    SplineFont* sf = NULL;
+    int flags = 0;
+    long offset = 0;
+
+    unsigned char buffer[16], buffer2[16];
+    long rdata_pos, map_pos, type_list, name_list, rpos;
+    int32 rdata_len;
+    uint32 nfnt_pos, font_pos, fond_pos;
+    unsigned long tag;
+    int i, cnt, subcnt;
+    int nfnt_subcnt=0, font_subcnt=0, fond_subcnt=0;
+
+    fseek(f,offset,SEEK_SET);
+    if ( fread(buffer,1,16,f)!=16 )
+    {
+        fclose(f);
+        return 0;
+    }
+    rdata_pos = offset + ((buffer[0]<<24)|(buffer[1]<<16)|(buffer[2]<<8)|buffer[3]);
+    map_pos = offset + ((buffer[4]<<24)|(buffer[5]<<16)|(buffer[6]<<8)|buffer[7]);
+    rdata_len = ((buffer[8]<<24)|(buffer[9]<<16)|(buffer[10]<<8)|buffer[11]);
+    /* map_len = ((buffer[12]<<24)|(buffer[13]<<16)|(buffer[14]<<8)|buffer[15]); */
+    if ( rdata_pos+rdata_len!=map_pos || rdata_len==0 )
+    {
+        fclose(f);
+        return 0;
+    }
+    fseek(f,map_pos,SEEK_SET);
+    buffer2[15] = buffer[15]+1; /* make it be different */
+    if ( fread(buffer2,1,16,f)!=16 )
+    {
+        fclose(f);
+        return 0;
+    }
+
+    /* Apple's data fork resources appear to have a bunch of zeroes here instead */
+    /*  of a copy of the first 16 bytes */
+    for ( i=0; i<16; ++i )
+    {
+        if ( buffer2[i]!=0 )
+            break;
+    }
+    if ( i != 16 ) 
+    {
+        for ( i=0; i<16; ++i )
+        {
+            if ( buffer[i]!=buffer2[i] )
+            {
+                fclose(f);
+                return 0;
+            }
+        }
+    }
+    
+    getlong(f);     /* skip the handle to the next resource map */
+    getushort(f);   /* skip the file resource number */
+    getushort(f);   /* skip the attributes */
+    type_list = map_pos + getushort(f);
+    name_list = map_pos + getushort(f);
+
+    fseek(f,type_list,SEEK_SET);
+    cnt = getushort(f)+1;
+    for ( i=0; i<cnt; ++i ) {
+        tag = getlong(f);
+        /* printf( "%c%c%c%c\n", tag>>24, (tag>>16)&0xff, (tag>>8)&0xff, tag&0xff );*/
+        subcnt = getushort(f)+1;
+        rpos = type_list+getushort(f);
+        sf = NULL;
+        if ( tag==CHR('P','O','S','T') && !(flags&(ttf_onlystrikes|ttf_onlykerns)))     /* No FOND */
+        {
+            //return subcnt;
+            //sf = SearchPostScriptResources(f,rpos,subcnt,rdata_pos,flags);
+        }
+        else if ( tag==CHR('s','f','n','t') && !(flags&ttf_onlykerns))
+        {
+            //ttf font count
+            fclose(f);
+            return subcnt;
+            //sf = SearchTtfResources(f,rpos,subcnt,rdata_pos,name_list,filename,flags,openflags);
+        }
+        else if ( tag==CHR('N','F','N','T') ) 
+        {
+            //NFNT Font for bdf font count
+            nfnt_pos = rpos;
+            nfnt_subcnt = subcnt;
+        } 
+        else if ( tag==CHR('F','O','N','T') ) 
+        {
+            font_pos = rpos;
+            font_subcnt = subcnt;
+        } 
+        else if ( tag==CHR('F','O','N','D') ) 
+        {
+            fond_pos = rpos;
+            fond_subcnt = subcnt;
+        }
+    }
+    fclose(f);
     return -1;
 }
 

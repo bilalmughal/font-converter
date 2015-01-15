@@ -38,5 +38,6 @@ void* LoadFont(const char* src_file);
 char** get_font_names(const char* src_file);
 int get_ttc_font_count(const char* src_file);
 int convert_font(const char* src_file, const char* output_format, const char* output_file, const char* out_dir);
+int get_dfont_font_count(const char* src_file);
 
 #endif //__FF_BRIDGE_H__

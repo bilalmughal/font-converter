@@ -184,6 +184,13 @@ class FFTestSuite : public CxxTest::TestSuite
                 free(font_names[i]);
             free(font_names);
         }
+
+        void test_getdFontCount_dfontwith2ttf( void )
+        {
+            TS_TRACE("Starting Test getdFontCount_dfontwith2ttf");
+            int res = get_dfont_font_count("test/data/Courier.dfont");
+            TS_ASSERT_EQUALS( res, 2 );
+        }
 };
 
 #endif  //__FF_TEST_H__
