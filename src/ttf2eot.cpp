@@ -29,6 +29,8 @@
 // =====================================================================================
 
 #include "ttf2eot.h"
+#include "OpenTypeUtilities.h"
+#include <fstream>
 
 TTF2Eot::TTF2Eot()
 {
@@ -37,4 +39,11 @@ TTF2Eot::TTF2Eot()
 TTF2Eot::~TTF2Eot()
 {
 }
+
+int TTF2Eot::Convert()
+{
+    return 1;
+}
+
+
 

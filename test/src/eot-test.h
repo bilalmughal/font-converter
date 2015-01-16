@@ -19,7 +19,7 @@
 #define __EOT_TEST_H__
 
 #include <cxxtest/TestSuite.h>
-
+#include "ttf2eot.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -29,13 +29,15 @@ extern "C" {
 }
 #endif
 
-class MyTestSuite2 : public CxxTest::TestSuite
+class Ttf2EotTestSuite : public CxxTest::TestSuite
 {
 public:
-    void testAddition(void)
+    void test_convert_validttf(void)
     {
-        TS_ASSERT(1 + 1 > 1);
-        TS_ASSERT_EQUALS(1 + 1, 2);
+        TTF2Eot ttf2Eot;
+        int res = ttf2Eot.Convert();
+
+        TS_ASSERT_EQUALS(res, 0);
     }
 };
 

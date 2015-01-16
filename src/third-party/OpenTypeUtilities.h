@@ -27,6 +27,7 @@
 
 #ifndef OpenTypeUtilities_h
 #define OpenTypeUtilities_h
+#include <vector>
 
 using std::vector;
 

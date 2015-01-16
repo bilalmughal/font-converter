@@ -19,6 +19,7 @@
 //
 //       Filename:  ttf2eot.h
 //
+//
 //    Description:  Ttf to eot font converter
 //
 //        Version:  1.0
@@ -27,16 +28,33 @@
 //         Author:  Mirza Bilal, bilal@mirzabilal.com
 //
 // =====================================================================================
+
 #ifndef __TTF2EOT_H__
 #define __TTF2EOT_H__
 
+#include <string>
+
+using std::string;
+
 class TTF2Eot 
 {
-public:
-    TTF2Eot();
-    virtual ~TTF2Eot();
-private:
-    /* data */
+    public:
+        TTF2Eot();
+        virtual ~TTF2Eot();
+
+    private:
+        string srcFile;
+        string outfile;
+
+    public:
+        string OutFile() const { return outfile; }
+        void OutFile(string value) { outfile = value; }
+        
+        string SrcFile() const { return srcFile; }
+        void SrcFile(string value) { srcFile = value; }
+
+        int Convert();
 };
 
 #endif //__TTF2EOT_H__
+
