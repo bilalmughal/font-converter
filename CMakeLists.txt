@@ -27,6 +27,17 @@ set(FFBRIDGE_LIBS ${FFBRIDGE_LIBS} ${FONTFORGE_LIBRARIES})
 add_library(${FFBRIDGE_LIB} SHARED ${FONT_CONVERTER_SRC})
 target_link_libraries(${FFBRIDGE_LIB} ${FFBRIDGE_LIBS})
 
+#TTF to EOT Library
+set(TTF2EOT_LIB ttf2eot)
+set(TTF2EOT_SRC 
+    #${FONT_CONVERTER_SRC}
+  src/ttf2eot.cpp
+  src/third-party/OpenTypeUtilities.cpp
+)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src/third-party)
+
+add_library(${TTF2EOT_LIB} SHARED ${FONT_CONVERTER_SRC})
+
 #Main Executable font-converter
 set(FONT_CONVERTER_SRC ${FONT_CONVERTER_SRC}
   src/font-converter.cpp
