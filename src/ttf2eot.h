@@ -19,7 +19,6 @@
 //
 //       Filename:  ttf2eot.h
 //
-//
 //    Description:  Ttf to eot font converter
 //
 //        Version:  1.0
@@ -39,16 +38,16 @@ using std::string;
 class TTF2Eot 
 {
     public:
-        TTF2Eot();
+        TTF2Eot(string sFile="", string oFile="");
         virtual ~TTF2Eot();
 
     private:
         string srcFile;
-        string outfile;
+        string outFile;
 
     public:
-        string OutFile() const { return outfile; }
-        void OutFile(string value) { outfile = value; }
+        string OutFile() const { return outFile; }
+        void OutFile(string value) { outFile = value; }
         
         string SrcFile() const { return srcFile; }
         void SrcFile(string value) { srcFile = value; }

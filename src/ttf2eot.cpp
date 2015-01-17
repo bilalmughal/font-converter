@@ -30,10 +30,13 @@
 
 #include "ttf2eot.h"
 #include "OpenTypeUtilities.h"
-#include <fstream>
+#include <iostream>
 
-TTF2Eot::TTF2Eot()
+using namespace std;
+TTF2Eot::TTF2Eot(string sFile, string oFile)
 {
+    if(!sFile.empty())
+        this->srcFile = sFile;
 }
 
 TTF2Eot::~TTF2Eot()
@@ -42,6 +45,16 @@ TTF2Eot::~TTF2Eot()
 
 int TTF2Eot::Convert()
 {
+    if(this->srcFile.empty())
+    {
+        cerr<<"No source file provided"<<endl;
+        return 1;
+    }
+    if(this->outFile.empty())
+    {
+        outFile = srcFile + ".eot"; 
+    }
+    
     return 1;
 }
 
